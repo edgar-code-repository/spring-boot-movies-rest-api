@@ -1,0 +1,36 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.movies.mapper.MovieMapper">
+
+    <resultMap type="com.example.movies.model.Movie" id="MovieResult">
+        <id property="movieId" column="movie_id"/>
+        <result property="title" column="title"/>
+        <result property="year" column="year"/>
+        <result property="poster" column="poster"/>
+        <result property="plot" column="plot"/>
+        <result property="genreId" column="genre_id"/>
+    </resultMap>
+
+    <select id="getMoviesByGenre" resultMap="MovieResult">
+        {call retrieve_movies_by_genre(#{genreId})}
+    </select>
+
+    <select id="getMovieById" resultMap="MovieResult">
+        {call retrieve_movie_by_id(#{movieId})}
+    </select>
+
+    <insert id="addMovie" parameterType="com.example.movies.model.Movie" statementType="CALLABLE">
+        {call insert_movie(#{movieId, mode=OUT, jdbcType=INTEGER}, #{title, mode=IN, jdbcType=VARCHAR}, #{year, mode=IN, jdbcType=INTEGER}, #{poster, mode=IN, jdbcType=VARCHAR}, #{plot, mode=IN, jdbcType=VARCHAR}, #{genreId, mode=IN, jdbcType=INTEGER})}
+    </insert>
+
+    <update id="updateMovie" parameterType="com.example.movies.model.Movie" >
+        {call update_movie_by_id(#{movieId}, #{name}, #{year}, #{poster}, #{plot}, #{genreId})}
+    </update>
+
+    <delete id="deleteMovie" parameterType="int" >
+        {call delete_movie_by_id(#{movieId})}
+    </delete>
+
+</mapper>
